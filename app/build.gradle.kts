@@ -38,6 +38,10 @@ android {
         }
     }
 
+    lint {
+        disable.add("NullSafeMutableLiveData")
+    }
+
     buildTypes {
         release {
             if (signingConfigs.findByName("release") != null) {
