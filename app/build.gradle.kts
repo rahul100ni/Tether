@@ -13,11 +13,11 @@ val localProps = Properties().apply {
 }
 
 android {
-    namespace = "com.rahul100ni.tether"
+    namespace = "com.vakya.tether"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.rahul100ni.tether"
+        applicationId = "com.vakya.tether"
         minSdk = 24
         targetSdk = 36
         versionCode = 8

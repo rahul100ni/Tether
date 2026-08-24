@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <permission
-        android:name="com.rahul100ni.tether.permission.START_MONITORING"
+        android:name="com.vakya.tether.permission.START_MONITORING"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -62,7 +62,7 @@
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <!-- Must match NfcWriteActivity.NFC_MIME_TYPE -->
-                <data android:mimeType="application/vnd.com.rahul100ni.tether" />
+                <data android:mimeType="application/vnd.com.vakya.tether" />
             </intent-filter>
         </activity>
         <activity
@@ -81,7 +81,7 @@
             android:name=".ShortcutHandlerActivity"
             android:exported="true"
             android:label="@string/title_activity_shortcut_handler"
-            android:permission="com.rahul100ni.tether.permission.START_MONITORING"
+            android:permission="com.vakya.tether.permission.START_MONITORING"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".QrCodeActivity"
@@ -122,8 +122,8 @@
             android:name=".ScheduleReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.rahul100ni.tether.SCHEDULE_START" />
-                <action android:name="com.rahul100ni.tether.SCHEDULE_STOP" />
+                <action android:name="com.vakya.tether.SCHEDULE_START" />
+                <action android:name="com.vakya.tether.SCHEDULE_STOP" />
             </intent-filter>
         </receiver>
     </application>

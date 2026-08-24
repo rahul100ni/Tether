@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.os.Bundle
 import android.widget.Toast
@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 class ShortcutHandlerActivity : ComponentActivity() {
 
     companion object {
-        const val ACTION_START_MONITORING = "com.rahul100ni.tether.START_MONITORING"
+        const val ACTION_START_MONITORING = "com.vakya.tether.START_MONITORING"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

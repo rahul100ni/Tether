@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Force dark mode at the system theme level -->
-    <style name="Theme.Tether" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Tether" parent="android:Theme.Material.NoActionBar">
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowBackground">@color/tether_black</item>
         <item name="android:statusBarColor">@android:color/transparent</item>

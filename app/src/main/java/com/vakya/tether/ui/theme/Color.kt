@@ -1,4 +1,4 @@
-package com.rahul100ni.tether.ui.theme
+package com.vakya.tether.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

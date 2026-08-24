@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.Manifest
 import android.content.Context
@@ -41,7 +41,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -61,9 +60,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.rahul100ni.tether.ui.theme.TetherNeon
-import com.rahul100ni.tether.ui.theme.TetherNeonContainer
-import com.rahul100ni.tether.ui.theme.TetherTheme
+import com.vakya.tether.ui.theme.TetherNeon
+import com.vakya.tether.ui.theme.TetherNeonContainer
+import com.vakya.tether.ui.theme.TetherTheme
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.delay
@@ -351,7 +350,7 @@ fun MainScreen() {
                         modifier = Modifier.fillMaxWidth().height(56.dp),
                         shape = RoundedCornerShape(24.dp),
                         border = androidx.compose.foundation.BorderStroke(1.dp, TetherNeon),
-                        colors = OutlinedButtonDefaults.outlinedButtonColors(contentColor = TetherNeon),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = TetherNeon),
                         onClick = { settingsLauncher.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)) }
                     ) {
                         Text("GRANT OVERLAY PERMISSION", style = MaterialTheme.typography.labelLarge)

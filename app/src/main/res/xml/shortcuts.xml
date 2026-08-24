@@ -8,9 +8,9 @@
         android:shortcutDisabledMessage="@string/shortcut_start_session_disabled">
         <!-- Must match ShortcutHandlerActivity.ACTION_START_MONITORING -->
         <intent
-            android:action="com.rahul100ni.tether.START_MONITORING"
-            android:targetPackage="com.rahul100ni.tether"
-            android:targetClass="com.rahul100ni.tether.ShortcutHandlerActivity" />
+            android:action="com.vakya.tether.START_MONITORING"
+            android:targetPackage="com.vakya.tether"
+            android:targetClass="com.vakya.tether.ShortcutHandlerActivity" />
     </shortcut>
 </shortcuts>
 

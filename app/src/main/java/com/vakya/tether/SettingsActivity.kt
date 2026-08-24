@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.app.TimePickerDialog
 import android.content.Context
@@ -23,8 +23,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
-import com.rahul100ni.tether.ui.theme.TetherNeon
-import com.rahul100ni.tether.ui.theme.TetherTheme
+import com.vakya.tether.ui.theme.TetherNeon
+import com.vakya.tether.ui.theme.TetherTheme
 import java.util.Locale
 
 object AppSettings {
@@ -328,7 +328,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         SettingsSection(title = "AUTOMATION") {
             SettingsSwitchRow(
                 label = "Allow automation apps",
-                caption = "Tasker, MacroDroid, Samsung Routines and similar apps can start or stop sessions by broadcasting com.rahul100ni.tether.SCHEDULE_START or SCHEDULE_STOP",
+                caption = "Tasker, MacroDroid, Samsung Routines and similar apps can start or stop sessions by broadcasting com.vakya.tether.SCHEDULE_START or SCHEDULE_STOP",
                 checked = externalAutomation,
                 enabled = editable,
                 onCheckedChange = {

@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.content.BroadcastReceiver
 import android.content.Context

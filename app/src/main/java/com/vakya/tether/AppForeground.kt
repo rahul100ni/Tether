@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 /**
  * Tracks which Tether screens are currently visible so NfcHandlerActivity can tell a

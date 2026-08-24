@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -19,9 +19,9 @@ import android.util.Log
 class ScheduleReceiver : BroadcastReceiver() {
 
     companion object {
-        const val ACTION_SCHEDULE_START = "com.rahul100ni.tether.SCHEDULE_START"
-        const val ACTION_SCHEDULE_STOP = "com.rahul100ni.tether.SCHEDULE_STOP"
-        const val EXTRA_FROM_ALARM = "com.rahul100ni.tether.extra.FROM_ALARM"
+        const val ACTION_SCHEDULE_START = "com.vakya.tether.SCHEDULE_START"
+        const val ACTION_SCHEDULE_STOP = "com.vakya.tether.SCHEDULE_STOP"
+        const val EXTRA_FROM_ALARM = "com.vakya.tether.extra.FROM_ALARM"
     }
 
     override fun onReceive(context: Context, intent: Intent) {

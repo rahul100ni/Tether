@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -14,7 +14,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.edit
-import com.rahul100ni.tether.database.AppDatabase
+import com.vakya.tether.database.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -39,9 +39,9 @@ class AppMonitoringService : Service() {
     companion object {
         const val NOTIFICATION_ID = 1
         const val CHANNEL_ID = "app_monitoring_channel"
-        const val ACTION_START_BREAK = "com.rahul100ni.tether.ACTION_START_BREAK"
-        const val ACTION_UNLOCK_APP = "com.rahul100ni.tether.ACTION_UNLOCK_APP"
-        const val EXTRA_UNLOCK_PACKAGE = "com.rahul100ni.tether.extra.UNLOCK_PACKAGE"
+        const val ACTION_START_BREAK = "com.vakya.tether.ACTION_START_BREAK"
+        const val ACTION_UNLOCK_APP = "com.vakya.tether.ACTION_UNLOCK_APP"
+        const val EXTRA_UNLOCK_PACKAGE = "com.vakya.tether.extra.UNLOCK_PACKAGE"
         private const val INITIAL_EVENT_LOOKBACK_MS = 60 * 60 * 1000L
         @Volatile var isRunning = false
     }

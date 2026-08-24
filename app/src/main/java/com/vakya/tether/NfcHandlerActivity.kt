@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent

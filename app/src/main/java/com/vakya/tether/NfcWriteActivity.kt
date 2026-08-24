@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -33,13 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.rahul100ni.tether.ui.theme.TetherTheme
+import com.vakya.tether.ui.theme.TetherTheme
 import java.io.IOException
 
 class NfcWriteActivity : ComponentActivity() {
 
     companion object {
-        const val NFC_MIME_TYPE = "application/vnd.com.rahul100ni.tether"
+        const val NFC_MIME_TYPE = "application/vnd.com.vakya.tether"
     }
 
     private var nfcAdapter: NfcAdapter? = null

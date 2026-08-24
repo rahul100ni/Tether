@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.Manifest
 import android.content.Context
@@ -22,6 +22,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +33,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -49,9 +49,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import coil.compose.rememberAsyncImagePainter
-import com.rahul100ni.tether.ui.theme.TetherNeon
-import com.rahul100ni.tether.ui.theme.TetherNeonContainer
-import com.rahul100ni.tether.ui.theme.TetherTheme
+import com.vakya.tether.ui.theme.TetherNeon
+import com.vakya.tether.ui.theme.TetherNeonContainer
+import com.vakya.tether.ui.theme.TetherTheme
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 
@@ -311,7 +311,7 @@ fun BlockingScreen(
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                     shape = RoundedCornerShape(24.dp),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                    colors = OutlinedButtonDefaults.outlinedButtonColors(
+                    colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 ) {
@@ -323,7 +323,7 @@ fun BlockingScreen(
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(24.dp),
                     border = BorderStroke(1.dp, TetherNeon),
-                    colors = OutlinedButtonDefaults.outlinedButtonColors(contentColor = TetherNeon)
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = TetherNeon)
                 ) {
                     Text("GO HOME", style = MaterialTheme.typography.labelLarge)
                 }

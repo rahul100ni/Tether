@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.app.Activity
 import android.app.Application
@@ -7,7 +7,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import com.rahul100ni.tether.database.AppDatabase
+import com.vakya.tether.database.AppDatabase
 
 class App : Application() {
     val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }

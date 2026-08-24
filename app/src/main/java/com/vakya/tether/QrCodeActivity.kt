@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.core.graphics.createBitmap
-import com.rahul100ni.tether.ui.theme.TetherTheme
+import com.vakya.tether.ui.theme.TetherTheme
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter

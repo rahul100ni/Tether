@@ -1,4 +1,4 @@
-package com.rahul100ni.tether.database
+package com.vakya.tether.database
 
 import android.content.Context
 import androidx.room.Database

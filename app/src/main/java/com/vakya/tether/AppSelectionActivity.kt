@@ -1,4 +1,4 @@
-package com.rahul100ni.tether
+package com.vakya.tether
 
 import android.app.Application
 import android.content.Intent
@@ -41,11 +41,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.rahul100ni.tether.database.BlockedApp
-import com.rahul100ni.tether.database.BlockedAppDao
-import com.rahul100ni.tether.ui.theme.TetherNeon
-import com.rahul100ni.tether.ui.theme.TetherNeonContainer
-import com.rahul100ni.tether.ui.theme.TetherTheme
+import com.vakya.tether.database.BlockedApp
+import com.vakya.tether.database.BlockedAppDao
+import com.vakya.tether.ui.theme.TetherNeon
+import com.vakya.tether.ui.theme.TetherNeonContainer
+import com.vakya.tether.ui.theme.TetherTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

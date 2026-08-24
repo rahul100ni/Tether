@@ -1,4 +1,4 @@
-package com.rahul100ni.tether.database
+package com.vakya.tether.database
 
 import androidx.room.Dao
 import androidx.room.Delete
