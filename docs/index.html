@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tether | Android App Blocker with NFC &amp; QR | Free &amp; Open Source</title>
+  <meta name="description" content="Free, open-source Android app blocker with NFC &amp; QR unlock. The no-subscription alternative to Brick and Opal. Strict mode, scheduled blocking, real-world friction." />
+  <link rel="canonical" href="https://tether.com/" />
+  <link rel="icon" type="image/png" href="/icon.png" />
+  <link rel="apple-touch-icon" href="/icon.png" />
+  <meta name="theme-color" content="#faf9f5" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Tether" />
+  <meta property="og:title" content="Tether — Free Android App Blocker with NFC &amp; QR Unlock" />
+  <meta property="og:description" content="Block distracting apps with real-world friction. Free, open source, no subscription. The Android-first alternative to Brick and Opal." />
+  <meta property="og:url" content="https://tether.com/" />
+  <meta property="og:image" content="https://tether.com/feature_graphic.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tether — Free Android App Blocker with NFC &amp; QR Unlock" />
+  <meta name="twitter:description" content="Block distracting apps with real-world friction. Free, open source, no subscription." />
+  <meta name="twitter:image" content="https://tether.com/feature_graphic.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Tether",
+    "operatingSystem": "Android 7.0 or later",
+    "applicationCategory": "UtilitiesApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "url": "https://tether.com/",
+    "downloadUrl": "https://github.com/cajdata/Tether/releases/latest",
+    "image": "https://tether.com/icon.png",
+    "description": "Free, open-source Android app blocker unlocked by a physical NFC tag or QR code. Strict mode, scheduled blocking, and configurable breaks add real-world friction to phone habits.",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Tether really free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. No in-app purchases, no subscriptions, no hidden costs. The source code is on GitHub under the Apache 2.0 license." }
+      },
+      {
+        "@type": "Question",
+        "name": "What NFC tags work with Tether?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Any NDEF-compatible NFC tag works, including common NTAG213, NTAG215, and NTAG216 stickers. A pack of ten costs a few dollars." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I bypass Tether without the tag?",
+        "acceptedAnswer": { "@type": "Answer", "text": "By default there is a 90-second emergency hold for lost tags. Settings can stretch the hold to 15 minutes or disable it, and Strict Mode requires scanning with Tether open to stop a session." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can blocking start automatically?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Scheduled Blocking starts and stops sessions at set times on chosen days, including overnight windows. Tasker, MacroDroid, and Samsung Routines can also trigger sessions via an opt-in broadcast." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Tether block system apps?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. A built-in safety list permanently excludes the dialer, SMS app, camera, settings, system UI, and launcher so the phone always stays usable." }
+      },
+      {
+        "@type": "Question",
+        "name": "What Android version is required?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Android 7.0 (API 24) or higher. Tether uses the standard Usage Stats and Foreground Service APIs." }
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #1a1a18;
+      --ink:      #2e2e2b;
+      --mid:      #6b6b66;
+      --rule:     #d4d4ce;
+      --paper:    #f5f4ef;
+      --cream:    #faf9f5;
+      --amber:    #c47c2b;
+      --amber-dk: #9e6020;
+      --check:    #2d7a2d;
+      --cross:    #a33;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--cream);
+      border-bottom: 2px solid var(--black);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 1rem 2rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+      flex: 1;
+    }
+
+    .nav-links a {
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      color: var(--mid);
+      text-decoration: none;
+    }
+
+    .nav-links a:hover { color: var(--black); }
+
+    .nav-cta {
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--cream) !important;
+      background: var(--black);
+      padding: 0.45rem 1rem;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-cta:hover { background: var(--amber-dk) !important; }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+    }
+
+    /* ── SHARED ── */
+    .container { max-width: 60rem; margin: 0 auto; padding: 0 2rem; }
+    .container-wide { max-width: 72rem; margin: 0 auto; padding: 0 2rem; }
+
+    .section-label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    hr.rule { border: none; border-top: 1px solid var(--rule); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 44rem;
+      margin: 5rem auto 4.5rem;
+      padding: 0 2rem;
+    }
+
+    .hero-kicker {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5.5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--black);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--mid);
+      max-width: 36rem;
+      line-height: 1.75;
+      margin-bottom: 2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--black);
+      color: var(--cream);
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.7rem 1.5rem;
+      display: inline-block;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary:hover { background: var(--amber-dk); }
+
+    .btn-secondary {
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      color: var(--mid);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 1px;
+    }
+
+    .btn-secondary:hover { color: var(--ink); border-color: var(--ink); }
+
+    /* ── ALERT BAR ── */
+    .alert {
+      background: var(--paper);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      padding: 1.1rem 2rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      color: var(--mid);
+      text-align: center;
+    }
+
+    .alert strong { color: var(--ink); }
+
+    /* ── SECTION PADDING ── */
+    .section { padding: 5rem 0; }
+    .section + hr.rule { margin: 0; }
+
+    /* ── HOW IT WORKS ── */
+    .steps-list { list-style: none; margin-top: 0.5rem; }
+
+    .steps-list li {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: 1rem;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .steps-list li:first-child { border-top: 1px solid var(--rule); }
+
+    .step-num {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.8rem;
+      color: var(--amber);
+      padding-top: 0.2rem;
+    }
+
+    .step-body h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 0.35rem;
+    }
+
+    .step-body p {
+      font-size: 0.9rem;
+      color: var(--mid);
+      line-height: 1.65;
+    }
+
+    /* ── TWO-COL ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      .two-col { grid-template-columns: 1fr; gap: 3rem; }
+    }
+
+    .prose h2 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--black);
+      margin-bottom: 1rem;
+    }
+
+    .prose p {
+      font-size: 0.95rem;
+      color: var(--mid);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .prose p:last-child { margin-bottom: 0; }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 2px solid var(--black);
+    }
+
+    @media (max-width: 720px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 460px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    .feature-item {
+      padding: 1.75rem 1.5rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .feature-item:nth-child(3n) { border-right: none; }
+
+    @media (max-width: 720px) {
+      .feature-item:nth-child(3n) { border-right: 1px solid var(--rule); }
+      .feature-item:nth-child(2n) { border-right: none; }
+    }
+
+    .feature-label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-item h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-item p {
+      font-size: 0.85rem;
+      color: var(--mid);
+      line-height: 1.6;
+    }
+
+    /* ── COMPARISON TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      border-top: 2px solid var(--black);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: system-ui, sans-serif;
+      font-size: 0.875rem;
+    }
+
+    thead th {
+      padding: 0.9rem 1.25rem;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+      white-space: nowrap;
+      color: var(--ink);
+    }
+
+    thead th:first-child { text-align: left; }
+
+    thead th.highlight {
+      background: #fdf3e6;
+      color: var(--amber-dk);
+      position: relative;
+    }
+
+    thead th.highlight::after {
+      content: 'Best Value';
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-top: 0.15rem;
+    }
+
+    tbody tr { border-bottom: 1px solid var(--rule); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--paper); }
+
+    tbody td {
+      padding: 0.85rem 1.25rem;
+      text-align: center;
+      color: var(--mid);
+    }
+
+    tbody td:first-child {
+      text-align: left;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    td.highlight { background: #fdf3e6; }
+
+    .check { color: var(--check); font-weight: 700; }
+    .cross { color: var(--cross); opacity: 0.7; }
+    .price-tag { color: var(--amber-dk); font-weight: 700; }
+
+    .table-note {
+      font-family: system-ui, sans-serif;
+      font-size: 0.75rem;
+      color: var(--mid);
+      margin-top: 1rem;
+      text-align: right;
+    }
+
+    /* ── FAQ ── */
+    .faq-list { list-style: none; }
+
+    .faq-item {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .faq-item:first-child { border-top: 1px solid var(--rule); }
+
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 1.25rem 0;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--black);
+      line-height: 1.4;
+    }
+
+    .faq-q:hover { color: var(--amber-dk); }
+
+    .faq-marker {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1rem;
+      color: var(--amber);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .faq-item.open .faq-marker { transform: rotate(45deg); }
+
+    .faq-a {
+      display: none;
+      padding-bottom: 1.25rem;
+    }
+
+    .faq-item.open .faq-a { display: block; }
+
+    .faq-a p {
+      font-size: 0.9rem;
+      color: var(--mid);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+
+    .faq-a p:last-child { margin-bottom: 0; }
+
+    .faq-a code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85em;
+      background: var(--paper);
+      padding: 0.1em 0.35em;
+      color: var(--ink);
+    }
+
+    .faq-a ol, .faq-a ul {
+      padding-left: 1.25rem;
+      font-size: 0.9rem;
+      color: var(--mid);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+
+    .faq-a li { margin-bottom: 0.35rem; }
+
+    .faq-a strong { color: var(--ink); font-weight: 600; }
+
+    .faq-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      .faq-cols { grid-template-columns: 1fr; gap: 0; }
+    }
+
+    /* ── SPECS ── */
+    .specs {
+      border-top: 2px solid var(--black);
+      width: 100%;
+      border-collapse: collapse;
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+    }
+
+    .specs tr { border-bottom: 1px solid var(--rule); }
+    .specs tr:last-child { border-bottom: none; }
+
+    .specs td {
+      padding: 0.75rem 0;
+      vertical-align: top;
+    }
+
+    .specs td:first-child {
+      color: var(--mid);
+      width: 40%;
+      padding-right: 1rem;
+    }
+
+    .specs td:last-child { color: var(--ink); font-weight: 500; }
+
+    /* ── CTA ── */
+    .cta {
+      background: var(--black);
+      color: var(--cream);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .cta p {
+      font-size: 1rem;
+      color: rgba(250, 249, 245, 0.6);
+      margin-bottom: 2.5rem;
+      font-family: system-ui, sans-serif;
+    }
+
+    .cta .btn-primary {
+      background: var(--amber);
+      color: var(--black);
+    }
+
+    .cta .btn-primary:hover { background: #d48a35; }
+
+    .cta .btn-secondary {
+      color: rgba(250,249,245,0.55);
+      border-color: rgba(250,249,245,0.25);
+    }
+
+    .cta .btn-secondary:hover {
+      color: var(--cream);
+      border-color: var(--cream);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 2px solid var(--black);
+      padding: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer .wordmark {
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--black);
+    }
+
+    footer nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    footer nav a {
+      font-family: system-ui, sans-serif;
+      font-size: 0.8rem;
+      color: var(--mid);
+      text-decoration: none;
+    }
+
+    footer nav a:hover { color: var(--ink); }
+
+    footer .legal {
+      font-family: system-ui, sans-serif;
+      font-size: 0.75rem;
+      color: var(--rule);
+      width: 100%;
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">Tether</a>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#compare">Compare</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="https://github.com/cajdata/Tether" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+    <a href="https://github.com/cajdata/Tether/releases/latest" target="_blank" rel="noopener" class="nav-cta">Download APK</a>
+  </nav>
+
+  <main>
+
+    <section class="hero">
+      <p class="hero-kicker">Free &amp; Open Source for Android</p>
+      <h1>Block distracting apps with a physical tap.</h1>
+      <p>Select what to block, tap an NFC tag to start, and put the tag out of reach. The only exit is the tag. No digital bypass, no "just this once."</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="https://github.com/cajdata/Tether/releases/latest" target="_blank" rel="noopener">Download APK</a>
+        <a class="btn-secondary" href="https://github.com/cajdata/Tether" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <div class="alert">
+      <strong>No subscription. No account. No tracking.</strong> Everything runs locally on your device.
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="two-col">
+
+          <div class="reveal">
+            <p class="section-label">How it works</p>
+            <ol class="steps-list">
+              <li>
+                <span class="step-num">01</span>
+                <div class="step-body">
+                  <h3>Pick your blocked apps</h3>
+                  <p>Choose any installed app. A safety list permanently excludes your dialer, messaging app, camera, launcher, and settings so you can never brick your phone.</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">02</span>
+                <div class="step-body">
+                  <h3>Write an NFC tag or generate a QR code</h3>
+                  <p>Tether writes its token to any NDEF-compatible tag (NTAG213, 215, or 216) in seconds. Prefer QR? Generate one in-app and print it or hide it somewhere inconvenient.</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">03</span>
+                <div class="step-body">
+                  <h3>Start a session and put the tag away</h3>
+                  <p>Tap Start and set the tag somewhere out of arm's reach. When you try to open a blocked app, a wall appears. The only way out is the tag.</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">04</span>
+                <div class="step-body">
+                  <h3>Take a break if needed</h3>
+                  <p>5-minute pauses that reset when the session ends. Choose zero to five per session in Settings.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div class="reveal">
+            <p class="section-label">Why physical</p>
+            <div class="prose">
+              <h2>Software willpower is weak.</h2>
+              <p>Any app you can bypass with a tap in settings, you will bypass. The decision to stop focusing becomes frictionless.</p>
+              <p>An NFC tag adds one deliberate physical step. You have to reach for the object that unlocks you. That pause is the whole product.</p>
+              <p>I use <a href="https://amzn.to/418E7nb" target="_blank" rel="noopener" style="color:var(--amber-dk);">these NTAG215 black adhesive sticker tags</a> — low-profile, stick well, and a pack of 10 is a few dollars. Write your tag with the app, stick it somewhere that forces you to stand up, and you're done.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- FEATURES -->
+    <section class="section" id="features">
+      <div class="container">
+        <p class="section-label reveal">Features</p>
+        <div class="features-grid reveal">
+          <div class="feature-item">
+            <p class="feature-label">Unlock</p>
+            <h3>NFC Tag</h3>
+            <p>Write Tether's token to any NDEF-compatible tag. Tap it to start and stop monitoring.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Unlock</p>
+            <h3>QR Code</h3>
+            <p>Generate a QR code in-app and print it. Stash it anywhere that adds real-world distance.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Blocking</p>
+            <h3>Block Any App</h3>
+            <p>Select any launchable app. Critical system apps are permanently off-limits.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Session</p>
+            <h3>Smart Breaks</h3>
+            <p>5-minute pauses for quick checks that won't derail focus. Choose zero to five per session.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Reliability</p>
+            <h3>Boot Persistence</h3>
+            <p>If your device restarts during an active session, Tether resumes automatically.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Safety</p>
+            <h3>Emergency Override</h3>
+            <p>Lost your tag? A slow hold stops the session — 30 seconds to 15 minutes, your choice. Or disable it entirely.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Automation</p>
+            <h3>Scheduled Blocking</h3>
+            <p>Sessions start and stop on their own at the times and days you pick. Set 10 pm to 7 am and sleep instead of scroll.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Discipline</p>
+            <h3>Strict Mode</h3>
+            <p>Stopping a session requires scanning with Tether open. Scanning on a block screen unlocks just that one app, briefly.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Integration</p>
+            <h3>Tasker &amp; Routines</h3>
+            <p>Opt-in broadcast actions let Tasker, MacroDroid, or Samsung Routines trigger blocking — by location, calendar, anything.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Awareness</p>
+            <h3>Attempt Counter</h3>
+            <p>See how many times you tried to open a blocked app. Accountability you can't ignore.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Convenience</p>
+            <h3>App Shortcut</h3>
+            <p>Long-press the Tether icon to start a session without opening the app.</p>
+          </div>
+          <div class="feature-item">
+            <p class="feature-label">Trust</p>
+            <h3>Open Source</h3>
+            <p>Every line of code is on GitHub. No black boxes, no telemetry, no ads.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- TECHNICAL SPECS -->
+    <section class="section">
+      <div class="container">
+        <div class="two-col">
+          <div class="reveal">
+            <p class="section-label">Technical</p>
+            <table class="specs">
+              <tr><td>Platform</td><td>Android 7.0 (API 24) and up</td></tr>
+              <tr><td>Unlock methods</td><td>NFC tag, QR code scan</td></tr>
+              <tr><td>Triggers</td><td>Manual, NFC, QR, schedule, Tasker/Routines broadcast</td></tr>
+              <tr><td>Permissions</td><td>Usage stats, draw over other apps, foreground service, camera (QR scanning), notifications</td></tr>
+              <tr><td>Data collection</td><td>None</td></tr>
+              <tr><td>Internet</td><td>Not required</td></tr>
+              <tr><td>Price</td><td>Free, no in-app purchases</td></tr>
+              <tr><td>Source</td><td><a href="https://github.com/cajdata/Tether" target="_blank" rel="noopener" style="color:var(--amber-dk);font-family:system-ui,sans-serif;font-size:0.85rem;">github.com/cajdata/Tether</a></td></tr>
+            </table>
+          </div>
+          <div class="reveal">
+            <p class="section-label">What it does not do</p>
+            <div class="prose">
+              <h2>No cloud. No account. No ads.</h2>
+              <p>Tether does not sync to the cloud, sell usage data, or require a login. It has no analytics, no A/B tests, and no ads.</p>
+              <p>It runs a foreground service that checks the active app once per second. When it sees a blocked app, it covers the screen. That is the entire feature set.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- COMPARISON -->
+    <section class="section" id="compare">
+      <div class="container-wide">
+        <p class="section-label reveal">Compare</p>
+        <div class="two-col" style="margin-bottom:2.5rem;">
+          <div class="reveal">
+            <div class="prose">
+              <h2>Why choose Tether?</h2>
+              <p>The only free, open-source Android app blocker with physical enforcement. No subscription required — ever.</p>
+            </div>
+          </div>
+        </div>
+        <div class="table-wrap reveal">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th class="highlight">Tether</th>
+                <th>Brick</th>
+                <th>Opal</th>
+                <th>Freedom</th>
+                <th>One Sec</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Price</td><td class="highlight"><span class="price-tag">Free</span></td><td>$59 device</td><td>$99.99/yr</td><td>$39.99/yr</td><td>$19/yr</td></tr>
+              <tr><td>Android Support</td><td class="highlight"><span class="check">Yes</span></td><td><span class="check">Yes</span> (12+)</td><td>Limited</td><td><span class="check">Yes</span></td><td><span class="check">Yes</span></td></tr>
+              <tr><td>NFC Physical Unlock</td><td class="highlight"><span class="check">Yes</span></td><td><span class="check">Yes</span></td><td><span class="cross">No</span></td><td><span class="cross">No</span></td><td><span class="cross">No</span></td></tr>
+              <tr><td>QR Code Unlock</td><td class="highlight"><span class="check">Yes</span></td><td><span class="cross">No</span></td><td><span class="cross">No</span></td><td><span class="cross">No</span></td><td><span class="cross">No</span></td></tr>
+              <tr><td>No Subscription</td><td class="highlight"><span class="check">Yes</span></td><td><span class="check">Yes</span></td><td>Lifetime tier only</td><td>Lifetime tier only</td><td>Lifetime tier only</td></tr>
+              <tr><td>Open Source</td><td class="highlight"><span class="check">Yes</span></td><td><span class="cross">No</span></td><td><span class="cross">No</span></td><td><span class="cross">No</span></td><td><span class="cross">No</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note reveal">Comparison based on publicly listed product details as of July 2026. Prices vary by region and promotion — check each product's site for current pricing.</p>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+      <div class="container">
+        <p class="section-label reveal">FAQ</p>
+        <div class="faq-cols">
+
+          <div>
+            <ul class="faq-list">
+
+              <li class="faq-item">
+                <button class="faq-q">Is Tether really free? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Yes. No in-app purchases, no subscriptions, no hidden costs. The source code is on GitHub under the Apache 2.0 license.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">What NFC tags work with Tether? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Any NDEF-compatible NFC tag works. Personally, I use <a href="https://amzn.to/418E7nb" target="_blank" rel="noopener" style="color:var(--amber-dk);">these NTAG215 black adhesive sticker tags</a> — they're low-profile, stick well, and the black color blends in wherever you put them. A pack of 10 is a few dollars.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">Can I bypass Tether without the tag? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>By default there's a 90-second emergency hold for situations where a tag is genuinely lost — slow enough to stop impulse bypassing. If that's still too easy, Settings lets you stretch the hold to 15 minutes or disable it completely, and Strict Mode requires scanning with Tether open to stop a session. Combine those with zero breaks and the only way out is the tag or printed QR code you stashed across the room.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">Can blocking start automatically? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Yes. Settings &rarr; Scheduled Blocking starts sessions at a set time on the days you choose, with an optional auto-stop time — overnight windows like 22:00 to 07:00 work fine. Automation apps (Tasker, MacroDroid, Samsung Routines) can also start or stop sessions via broadcast if you enable the opt-in toggle; setup examples are in the GitHub README.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">My printed QR code stopped working after updating? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>As of v1.5.0, every install generates its own unique QR code — the old shared code was public in the source, so anyone could print a working unlock. Open "Show QR Code" and print a fresh one. NFC tags are unaffected and keep working as-is.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">Does Tether block system apps? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>No. A built-in safety list permanently excludes your dialer, SMS app, camera, settings, system UI, and launcher. You cannot accidentally make your phone unusable.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">Is my data private? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Completely. Tether stores everything locally on your device using a local Room database. There is no account, no server, no analytics, and no ads. Verify it yourself in the source code.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">What Android version is required? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Android 7.0 (API 24) or higher. Tether uses the standard Usage Stats and Foreground Service APIs available across all modern Android versions.</p>
+                </div>
+              </li>
+
+            </ul>
+          </div>
+
+          <div>
+            <ul class="faq-list">
+
+              <li class="faq-item">
+                <button class="faq-q">How do I grant permissions on stock Android? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Tether needs two permissions. The app will prompt you for both on first launch, but here are the manual paths:</p>
+                  <ol>
+                    <li><strong>Usage access:</strong> Settings &rarr; Apps &rarr; Special app access &rarr; Usage access &rarr; Tether &rarr; Allow</li>
+                    <li><strong>Display over other apps:</strong> Settings &rarr; Apps &rarr; Special app access &rarr; Display over other apps &rarr; Tether &rarr; Allow</li>
+                  </ol>
+                  <p>Exact menu names vary slightly between Android 7 and Android 14, but the path is the same.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">Xiaomi / MIUI: why does Tether stop working? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>MIUI aggressively kills background services. You need to do all of the following:</p>
+                  <ol>
+                    <li><strong>Autostart:</strong> Settings &rarr; Apps &rarr; Manage apps &rarr; Tether &rarr; Autostart &rarr; On</li>
+                    <li><strong>Battery saver:</strong> Settings &rarr; Apps &rarr; Manage apps &rarr; Tether &rarr; Battery saver &rarr; No restrictions</li>
+                    <li><strong>Lock the app:</strong> In the Recents screen, long-press the Tether card and tap the lock icon to prevent it from being cleared.</li>
+                  </ol>
+                  <p>Without Autostart especially, MIUI will kill the monitoring service when your screen turns off.</p>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">Huawei / EMUI or HarmonyOS: same issue? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Yes. EMUI and HarmonyOS have their own battery management that kills services. Fix it with:</p>
+                  <ol>
+                    <li><strong>App launch:</strong> Settings &rarr; Apps &rarr; App launch &rarr; Tether &rarr; Manage manually &rarr; enable Auto-launch, Secondary launch, and Run in background</li>
+                    <li><strong>Battery optimization:</strong> Settings &rarr; Battery &rarr; App launch &rarr; Tether &rarr; Don't optimize</li>
+                  </ol>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">Samsung One UI: service keeps stopping? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Samsung's Adaptive Battery can restrict background activity. To prevent this:</p>
+                  <ol>
+                    <li><strong>Battery optimization:</strong> Settings &rarr; Device care (or Battery and device care) &rarr; Battery &rarr; Background usage limits &rarr; Never sleeping apps &rarr; Add Tether</li>
+                    <li>Alternatively: Settings &rarr; Apps &rarr; Tether &rarr; Battery &rarr; Unrestricted</li>
+                  </ol>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">OnePlus / OxygenOS or ColorOS? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <ol>
+                    <li><strong>Battery optimization:</strong> Settings &rarr; Battery &rarr; Battery optimization &rarr; All apps &rarr; Tether &rarr; Don't optimize</li>
+                    <li><strong>Auto-launch (ColorOS):</strong> Settings &rarr; Privacy/Security &rarr; App permissions &rarr; Auto-start management &rarr; Tether &rarr; On</li>
+                  </ol>
+                </div>
+              </li>
+
+              <li class="faq-item">
+                <button class="faq-q">Android 12+ restricted battery use warning? <span class="faq-marker">+</span></button>
+                <div class="faq-a">
+                  <p>Android 12 introduced stricter foreground service restrictions. If you see a "Restricted" battery state for Tether, change it:</p>
+                  <ol>
+                    <li>Settings &rarr; Apps &rarr; Tether &rarr; Battery &rarr; select <strong>Unrestricted</strong> (not Optimized or Restricted)</li>
+                  </ol>
+                  <p>The "Optimized" default is usually fine, but "Restricted" will kill the monitoring service.</p>
+                </div>
+              </li>
+
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Ready to actually focus?</h2>
+    <p>Free, open source, and on your phone in under a minute.</p>
+    <div class="hero-actions" style="justify-content:center;">
+      <a class="btn-primary" href="https://github.com/cajdata/Tether/releases/latest" target="_blank" rel="noopener">Download APK</a>
+      <a class="btn-secondary" href="https://github.com/cajdata/Tether" target="_blank" rel="noopener">View Source on GitHub</a>
+    </div>
+  </div>
+
+  <footer>
+    <span class="wordmark">Tether</span>
+    <nav>
+      <a href="https://github.com/cajdata/Tether" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/cajdata/Tether/releases" target="_blank" rel="noopener">Releases</a>
+      <a href="https://github.com/cajdata/Tether/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
+      <a href="https://github.com/cajdata/Tether/issues" target="_blank" rel="noopener">Issues</a>
+      <a href="mailto:tetherdev@gmail.com">Support</a>
+    </nav>
+    <p class="legal">Made in Denver, CO &nbsp;&middot;&nbsp; Tether is free and open source under the Apache 2.0 license.</p>
+    <p class="legal">As an Amazon Associate I earn from qualifying purchases.</p>
+    <p class="legal">On a personal note: my house is for sale. Take a look at <a href="https://8722independenceway.com" target="_blank" rel="noopener" style="color:var(--amber-dk);">8722 Independence Way in Arvada, CO</a>.</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
+      }),
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+    );
+    reveals.forEach(el => revealObserver.observe(el));
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+  </script>
+
+</body>
+</html>

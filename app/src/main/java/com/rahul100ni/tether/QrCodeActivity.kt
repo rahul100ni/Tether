@@ -1,0 +1,146 @@
+package com.rahul100ni.tether
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
+import androidx.core.graphics.createBitmap
+import com.rahul100ni.tether.ui.theme.TetherTheme
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
+import com.google.zxing.qrcode.QRCodeWriter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.security.SecureRandom
+
+class QrCodeActivity : ComponentActivity() {
+
+    companion object {
+        // The shared constant every install used before v1.5.0 — recognised only to
+        // tell users their printed code needs regenerating
+        const val LEGACY_QR_CONTENT = "TETHER_TOGGLE"
+        private const val TOKEN_PREFIX = "TETHER:"
+
+        // Generated once per install, so a QR printed from the repo or from someone
+        // else's phone can't control this device
+        fun getOrCreateToken(context: Context): String {
+            val prefs = AppSettings.prefs(context)
+            prefs.getString(AppSettings.KEY_QR_TOKEN, null)?.let { return it }
+            val bytes = ByteArray(16).also { SecureRandom().nextBytes(it) }
+            val token = TOKEN_PREFIX + bytes.joinToString("") { "%02x".format(it) }
+            prefs.edit { putString(AppSettings.KEY_QR_TOKEN, token) }
+            return token
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            TetherTheme {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text("Your QR Code") },
+                            navigationIcon = {
+                                IconButton(onClick = { finish() }) {
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                }
+                            }
+                        )
+                    }
+                ) { padding ->
+                    QrCodeScreen(
+                        modifier = Modifier.padding(padding),
+                        content = getOrCreateToken(this)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun QrCodeScreen(modifier: Modifier = Modifier, content: String) {
+    val qrResult by produceState<Result<Bitmap>?>(initialValue = null, producer = {
+        value = withContext(Dispatchers.Default) {
+            runCatching { generateQrCode(content) ?: error("Failed to generate QR code") }
+        }
+    })
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        when (val result = qrResult) {
+            null -> CircularProgressIndicator()
+            else -> {
+                val bitmap = result.getOrNull()
+                if (bitmap != null) {
+                    Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = "QR Code",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f),
+                        contentScale = ContentScale.Fit
+                    )
+                } else {
+                    Text(
+                        text = "Failed to generate QR code.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = "Scan this code to start or stop a monitoring session. " +
+                    "It's unique to this install — print it and keep it somewhere that takes effort to reach.",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+private fun generateQrCode(content: String): Bitmap? {
+    val writer = QRCodeWriter()
+    return try {
+        val hints = mapOf(EncodeHintType.MARGIN to 1)
+        val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512, hints)
+        val width = bitMatrix.width
+        val height = bitMatrix.height
+        val bmp = createBitmap(width, height, Bitmap.Config.RGB_565)
+        val pixels = IntArray(width * height) { i ->
+            if (bitMatrix[i % width, i / width]) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+        }
+        bmp.setPixels(pixels, 0, width, 0, 0, width, height)
+        bmp
+    } catch (e: Exception) {
+        Log.e("QrCodeActivity", "Failed to generate QR code", e)
+        null
+    }
+}
+

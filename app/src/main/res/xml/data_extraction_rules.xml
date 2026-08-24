@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Data extraction rules for API 31+. Pre-API 31 uses backup_rules.xml instead. -->
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Back up only the blocked apps database (user configuration); session-state prefs are not included -->
+        <include domain="database" path="app_database" />
+    </cloud-backup>
+    <device-transfer>
+        <!-- Back up only the blocked apps database (user configuration); session-state prefs are not included -->
+        <include domain="database" path="app_database" />
+    </device-transfer>
+</data-extraction-rules>

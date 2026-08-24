@@ -1,0 +1,5 @@
+Contact: mailto:tetherdev@gmail.com
+Expires: 2027-07-06T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://tether.com/.well-known/security.txt
+Policy: https://github.com/cajdata/Tether/blob/main/SECURITY.md
