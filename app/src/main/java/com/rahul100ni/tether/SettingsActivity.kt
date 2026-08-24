@@ -5,9 +5,12 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -15,15 +18,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
+import com.rahul100ni.tether.ui.theme.TetherNeon
 import com.rahul100ni.tether.ui.theme.TetherTheme
 import java.util.Locale
 
 object AppSettings {
     const val PREFS_NAME = "app_prefs"
-
     const val KEY_OVERRIDE_ENABLED = "override_enabled"
     const val KEY_OVERRIDE_SECONDS = "override_seconds"
     const val KEY_BREAKS_ALLOWED = "breaks_allowed"
@@ -53,7 +58,6 @@ object AppSettings {
 }
 
 class SettingsActivity : ComponentActivity() {
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,14 +66,28 @@ class SettingsActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("Settings") },
+                            title = {
+                                Text(
+                                    text = "SETTINGS",
+                                    style = MaterialTheme.typography.labelLarge.copy(letterSpacing = 3.sp),
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Back",
+                                        tint = TetherNeon
+                                    )
                                 }
-                            }
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.background
+                            )
                         )
-                    }
+                    },
+                    containerColor = MaterialTheme.colorScheme.background
                 ) { padding ->
                     SettingsScreen(modifier = Modifier.padding(padding))
                 }
@@ -84,7 +102,6 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     val prefs = remember { AppSettings.prefs(context) }
 
     var isServiceActive by remember { mutableStateOf(isServiceRunning(context, AppMonitoringService::class.java)) }
-
     var strictMode by remember { mutableStateOf(prefs.getBoolean(AppSettings.KEY_STRICT_MODE, false)) }
     var unlockMinutes by remember { mutableStateOf(prefs.getInt(AppSettings.KEY_UNLOCK_MINUTES, AppSettings.DEFAULT_UNLOCK_MINUTES)) }
     var overrideEnabled by remember { mutableStateOf(prefs.getBoolean(AppSettings.KEY_OVERRIDE_ENABLED, true)) }
@@ -106,26 +123,36 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp)
-            .padding(bottom = 32.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 40.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+
+        // ── Session Locked Banner ─────────────────────────────────────────
         if (isServiceActive) {
-            ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.errorContainer)
+                    .border(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+                    .padding(14.dp)
+            ) {
                 Text(
                     text = "Settings are locked while a session is active.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(16.dp)
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onErrorContainer
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
         }
 
-        SettingsSection(title = "Strict Mode") {
+        // ── STRICT MODE ───────────────────────────────────────────────────
+        SettingsSection(title = "STRICT MODE") {
             SettingsSwitchRow(
                 label = "Strict mode",
-                caption = "A session can only be stopped by scanning with Tether open. " +
-                        "Scanning on a block screen unlocks just that app, temporarily.",
+                caption = "A session can only be stopped by scanning with Tether open. Scanning on a block screen unlocks just that app, temporarily.",
                 checked = strictMode,
                 enabled = editable,
                 onCheckedChange = {
@@ -134,11 +161,10 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 }
             )
             if (strictMode) {
-                Text(
-                    text = "Temporary unlock duration",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "Temporary unlock duration", style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface)
+                Spacer(modifier = Modifier.height(6.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(1 to "1m", 5 to "5m", 10 to "10m", 30 to "30m").forEach { (minutes, label) ->
                         FilterChip(
@@ -152,6 +178,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "For maximum friction, combine with zero breaks and a disabled emergency override.",
                     style = MaterialTheme.typography.bodySmall,
@@ -160,7 +187,8 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        SettingsSection(title = "Emergency Override") {
+        // ── EMERGENCY OVERRIDE ────────────────────────────────────────────
+        SettingsSection(title = "EMERGENCY OVERRIDE") {
             SettingsSwitchRow(
                 label = "Enable emergency override",
                 caption = "Hold-to-stop button shown during a session",
@@ -172,11 +200,10 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 }
             )
             if (overrideEnabled) {
-                Text(
-                    text = "Hold duration",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "Hold duration", style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface)
+                Spacer(modifier = Modifier.height(6.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(30 to "30s", 90 to "90s", 300 to "5m", 900 to "15m").forEach { (seconds, label) ->
                         FilterChip(
@@ -191,20 +218,20 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                     }
                 }
             } else {
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "With the override disabled, only your NFC tag or QR code can stop a session.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 8.dp)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
 
-        SettingsSection(title = "Breaks") {
-            Text(
-                text = "Breaks allowed per session",
-                style = MaterialTheme.typography.bodyMedium
-            )
+        // ── BREAKS ───────────────────────────────────────────────────────
+        SettingsSection(title = "BREAKS") {
+            Text(text = "Breaks allowed per session", style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface)
+            Spacer(modifier = Modifier.height(6.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(0 to "None", 1 to "1", 3 to "3", 5 to "5").forEach { (count, label) ->
                     FilterChip(
@@ -220,7 +247,8 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        SettingsSection(title = "Scheduled Blocking") {
+        // ── SCHEDULED BLOCKING ────────────────────────────────────────────
+        SettingsSection(title = "SCHEDULED BLOCKING") {
             SettingsSwitchRow(
                 label = "Start sessions on a schedule",
                 caption = "Blocking begins automatically, no tag needed",
@@ -266,14 +294,12 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                         }
                     )
                 }
-                Text(
-                    text = "Days",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "Days", style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface)
+                Spacer(modifier = Modifier.height(6.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    val dayLabels = listOf("M", "T", "W", "T", "F", "S", "S")
-                    dayLabels.forEachIndexed { index, label ->
+                    listOf("M", "T", "W", "T", "F", "S", "S").forEachIndexed { index, label ->
                         val bit = 1 shl index
                         FilterChip(
                             selected = daysMask and bit != 0,
@@ -288,6 +314,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                     }
                 }
                 if (daysMask == 0) {
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Select at least one day for the schedule to run.",
                         style = MaterialTheme.typography.bodySmall,
@@ -297,11 +324,11 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        SettingsSection(title = "Automation") {
+        // ── AUTOMATION ────────────────────────────────────────────────────
+        SettingsSection(title = "AUTOMATION") {
             SettingsSwitchRow(
                 label = "Allow automation apps",
-                caption = "Tasker, MacroDroid, Samsung Routines and similar apps can start or stop " +
-                        "sessions by broadcasting com.rahul100ni.tether.SCHEDULE_START or SCHEDULE_STOP",
+                caption = "Tasker, MacroDroid, Samsung Routines and similar apps can start or stop sessions by broadcasting com.rahul100ni.tether.SCHEDULE_START or SCHEDULE_STOP",
                 checked = externalAutomation,
                 enabled = editable,
                 onCheckedChange = {
@@ -325,22 +352,27 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     }
 }
 
+// ── Section with neon title + thin divider ────────────────────────────────────
 @Composable
 private fun SettingsSection(title: String, content: @Composable ColumnScope.() -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+        Spacer(modifier = Modifier.height(20.dp))
+        // Neon section title
         Text(
             text = title,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(top = 16.dp)
+            style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 2.sp),
+            color = TetherNeon
         )
-        ElevatedCard(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                content = content
-            )
-        }
+        Spacer(modifier = Modifier.height(2.dp))
+        HorizontalDivider(
+            color = TetherNeon.copy(alpha = 0.2f),
+            thickness = 0.5.dp
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            content = content
+        )
     }
 }
 
@@ -357,13 +389,12 @@ private fun SettingsSwitchRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = label, style = MaterialTheme.typography.bodyLarge)
-            Text(
-                text = caption,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Text(text = label, style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (enabled) 1f else 0.5f))
+            Text(text = caption, style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (enabled) 1f else 0.5f))
         }
+        Spacer(modifier = Modifier.width(12.dp))
         Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
     }
 }
@@ -388,19 +419,16 @@ private fun TimeRow(
                     true
                 ).show()
             }
-            .padding(vertical = 8.dp),
+            .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.weight(1f)
-        )
+        Text(text = label, style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (enabled) 1f else 0.5f))
         Text(
             text = AppSettings.formatMinutesOfDay(minutesOfDay),
             style = MaterialTheme.typography.bodyLarge,
-            color = if (enabled) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            color = if (enabled) TetherNeon else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         )
     }
 }

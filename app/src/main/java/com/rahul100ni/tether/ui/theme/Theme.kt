@@ -1,67 +1,51 @@
 package com.rahul100ni.tether.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 
-private val DarkColorScheme = darkColorScheme(
-    primary = DarkPrimary,
-    onPrimary = DarkOnPrimary,
-    primaryContainer = DarkPrimaryContainer,
-    onPrimaryContainer = DarkOnPrimaryContainer,
-    secondary = DarkSecondary,
-    onSecondary = DarkOnSecondary,
-    secondaryContainer = DarkSecondaryContainer,
-    onSecondaryContainer = DarkOnSecondaryContainer,
-    background = DarkBackground,
-    onBackground = DarkOnBackground,
-    surface = DarkSurface,
-    onSurface = DarkOnSurface,
-    surfaceVariant = DarkSurfaceVariant,
-    onSurfaceVariant = DarkOnSurfaceVariant,
-    outline = DarkOutline,
-    outlineVariant = DarkOutlineVariant,
-    error = DarkError,
-    onError = DarkOnError,
-    errorContainer = DarkErrorContainer,
-    onErrorContainer = DarkOnErrorContainer,
+// ── Force dark-only — no light theme variant ──────────────────────────────
+private val TetherColorScheme = darkColorScheme(
+    primary              = TetherNeon,
+    onPrimary            = TetherOnNeon,
+    primaryContainer     = TetherNeonContainer,
+    onPrimaryContainer   = TetherNeon,
+    secondary            = TetherNeonDim,
+    onSecondary          = TetherOnNeon,
+    secondaryContainer   = TetherNeonContainer,
+    onSecondaryContainer = TetherBrightText,
+    background           = TetherBlack,
+    onBackground         = TetherBrightText,
+    surface              = TetherSurface,
+    onSurface            = TetherOnSurface,
+    surfaceVariant       = TetherSurfaceVar,
+    onSurfaceVariant     = TetherMutedText,
+    outline              = TetherOutline,
+    outlineVariant       = TetherOutlineVar,
+    error                = TetherError,
+    onError              = TetherOnError,
+    errorContainer       = TetherErrorContainer,
+    onErrorContainer     = TetherOnErrorContainer,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = LightPrimary,
-    onPrimary = LightOnPrimary,
-    primaryContainer = LightPrimaryContainer,
-    onPrimaryContainer = LightOnPrimaryContainer,
-    secondary = LightSecondary,
-    onSecondary = LightOnSecondary,
-    secondaryContainer = LightSecondaryContainer,
-    onSecondaryContainer = LightOnSecondaryContainer,
-    background = LightBackground,
-    onBackground = LightOnBackground,
-    surface = LightSurface,
-    onSurface = LightOnSurface,
-    surfaceVariant = LightSurfaceVariant,
-    onSurfaceVariant = LightOnSurfaceVariant,
-    outline = LightOutline,
-    outlineVariant = LightOutlineVariant,
-    error = LightError,
-    onError = LightOnError,
-    errorContainer = LightErrorContainer,
-    onErrorContainer = LightOnErrorContainer,
+// ── Shapes — sharp cards, large-radius buttons ────────────────────────────
+val TetherShapes = Shapes(
+    extraSmall = RoundedCornerShape(4.dp),
+    small      = RoundedCornerShape(8.dp),
+    medium     = RoundedCornerShape(12.dp),
+    large      = RoundedCornerShape(24.dp),
+    extraLarge = RoundedCornerShape(28.dp),
 )
 
 @Composable
-fun TetherTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-
+fun TetherTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
+        colorScheme = TetherColorScheme,
+        typography  = Typography,
+        shapes      = TetherShapes,
+        content     = content
     )
 }

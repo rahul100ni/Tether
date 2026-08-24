@@ -2,46 +2,29 @@ package com.rahul100ni.tether.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Dark scheme — green/teal brand palette
-val DarkPrimary = Color(0xFF67DBAF)
-val DarkOnPrimary = Color(0xFF003828)
-val DarkPrimaryContainer = Color(0xFF005139)
-val DarkOnPrimaryContainer = Color(0xFF84F8CB)
-val DarkSecondary = Color(0xFFB2CCBF)
-val DarkOnSecondary = Color(0xFF1E352A)
-val DarkSecondaryContainer = Color(0xFF344B40)
-val DarkOnSecondaryContainer = Color(0xFFCEE9D9)
-val DarkBackground = Color(0xFF0F1510)
-val DarkOnBackground = Color(0xFFDEE4DE)
-val DarkSurface = Color(0xFF0F1510)
-val DarkOnSurface = Color(0xFFDEE4DE)
-val DarkSurfaceVariant = Color(0xFF3C4940)
-val DarkOnSurfaceVariant = Color(0xFFBBC9C1)
-val DarkOutline = Color(0xFF859E94)
-val DarkOutlineVariant = Color(0xFF3C4940)
-val DarkError = Color(0xFFFFB4AB)
-val DarkOnError = Color(0xFF690005)
-val DarkErrorContainer = Color(0xFF93000A)
-val DarkOnErrorContainer = Color(0xFFFFDAD6)
+// ── Tether Brand Palette ───────────────────────────────────────────────────
+// OLED-black base, neon emerald accent — dark premium / fintech aesthetic
 
-// Light scheme
-val LightPrimary = Color(0xFF006C44)
-val LightOnPrimary = Color(0xFFFFFFFF)
-val LightPrimaryContainer = Color(0xFF8FF8C2)
-val LightOnPrimaryContainer = Color(0xFF002113)
-val LightSecondary = Color(0xFF4D6B59)
-val LightOnSecondary = Color(0xFFFFFFFF)
-val LightSecondaryContainer = Color(0xFFCDE9D6)
-val LightOnSecondaryContainer = Color(0xFF09271A)
-val LightBackground = Color(0xFFF5FBF5)
-val LightOnBackground = Color(0xFF191C1A)
-val LightSurface = Color(0xFFF5FBF5)
-val LightOnSurface = Color(0xFF191C1A)
-val LightSurfaceVariant = Color(0xFFDAE5DB)
-val LightOnSurfaceVariant = Color(0xFF3F4942)
-val LightOutline = Color(0xFF6F796F)
-val LightOutlineVariant = Color(0xFFBEC9BE)
-val LightError = Color(0xFFBA1A1A)
-val LightOnError = Color(0xFFFFFFFF)
-val LightErrorContainer = Color(0xFFFFDAD6)
-val LightOnErrorContainer = Color(0xFF410002)
+// Backgrounds
+val TetherBlack        = Color(0xFF050A07)   // OLED background
+val TetherSurface      = Color(0xFF0D1A12)   // Card / sheet surface
+val TetherSurfaceVar   = Color(0xFF132218)   // Variant surface / dividers
+
+// Primary — Neon Emerald
+val TetherNeon         = Color(0xFF00E5A0)   // Primary neon accent
+val TetherNeonDim      = Color(0xFF00B87A)   // Secondary / pressed state
+val TetherNeonContainer = Color(0xFF001F13)  // Primary container (bg for icon badges)
+val TetherOnNeon       = Color(0xFF00150C)   // Text/icon ON neon surface
+
+// Text
+val TetherBrightText   = Color(0xFFC8E6D7)   // Primary text on dark
+val TetherMutedText    = Color(0xFF4E6B5D)   // Subtitle / hint text
+val TetherOnSurface    = Color(0xFFB8D4C4)   // On-surface text
+val TetherOutline      = Color(0xFF1E3328)   // Border / outline
+val TetherOutlineVar   = Color(0xFF132218)   // Subtle border
+
+// Error — Red-pink
+val TetherError        = Color(0xFFFF4D6D)
+val TetherOnError      = Color(0xFF1A0010)
+val TetherErrorContainer = Color(0xFF2D0011)
+val TetherOnErrorContainer = Color(0xFFFFB3C1)
